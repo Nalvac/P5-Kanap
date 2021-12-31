@@ -1,0 +1,324 @@
+Déclaration d'une variable
+
+let nomVariable = 2;
+
+Objet :
+
+let myBook = {
+title: 'The Story of Tau',
+author: 'Will Alexander',
+numberOfPages: 250,
+isAvailable: true
+};
+
+
+
+let bookTitle = myBook.title;  // "L'Histoire de Tao"
+let bookPages = myBook.numberOfPages;  // 250
+
+let bookTitle = myBook.title;  // "L'Histoire de Tao"
+let bookPages = myBook.numberOfPages;  // 250
+
+/////////////Class
+
+class Book {
+constructor(title, author, pages) {
+this.title = title;
+this.author = author;
+this.pages = pages;
+}
+}
+
+let myBook = new Book("L'Histoire de Tao", "Will Alexander", 250);
+Cette ligne crée l'objet suivant :
+{
+title: "L'Histoire de Tao",
+author: "Will Alexander",
+pages: 250
+}
+
+
+///////////// Tableau 
+let guests = ["Sarah Kate", "Audrey Simon", "Will Alexander"];
+
+length : taille du tableau
+push  :  ajouter un élément à la fin d'un tableau
+unshift :  ajouter un élément au début d'un tableau
+pop() : supprimer un élément
+
+///////////// Condition
+
+l'égalité simple vérifie la valeur, mais pas le type. Donc ceci renvoie la valeur true  :
+5 == "5"
+
+par contre, l'égalité stricte vérifie à la fois la valeur et le type. Donc :
+5 === "5"
+renvoie   false  , car on compare un   number  à une   string  .
+
+
+for (let i in passengers) {
+   console.log("Embarquement du passager " + passengers[i]);
+}
+
+
+for (let passenger of passengers) {
+   console.log("Embarquement du passager " + passenger);
+}
+ C'est encore plus utile si le tableau est un peu plus complexe et contient par exemple des objet
+
+
+/////////////// Accédez aux éléments du DOM
+
+**************************** Document
+
+document.getElementById()
+document.getElementsByClassName()
+document.getElementsByTagName()
+
+document.getElementsByTagName()
+Avec cette méthode, vous rechercherez tous les éléments avec un nom de balise bien précis (par exemple tous les liens (  a  ), tous les boutons (  button  )...).
+
+document.querySelector() : une recherche complexe dans le DOM, en mélangeant plusieurs procédés.
+Par exemple,  document.querySelector("#myId p.article > a")
+
+querySelector(<selector>)  prend en paramètre le sélecteur et vous retournera le premier élément trouvé, ou  null  si aucun élément n'a été trouvé.
+
+*************************** Element
+Les recherches depuis un élément
+
+element.children  : cette propriété nous retourne la liste des enfants de cet élément ;
+
+element.parentElement  : cette propriété nous retourne l'élément parent de celui-ci ;
+
+element.nextElementSibling  /  element.previousElementSibling  : ces propriétés nous permettent de naviguer vers l'élément suivant / précédent de même niveau que notre élément.
+
+
+Exemple :
+
+<div id="parent">
+    <div id="previous">Précédent</div>
+    <div id="main">
+        <p>Paragraphe 1</p>
+        <p>Paragraphe 2</p>
+    </div>
+    <div id="next">Suivant</div>
+</div>
+
+const elt = document.getElementById('main');
+
+elt.children  nous retournera les éléments de type  p  qui sont les enfants de l'élément  #main
+
+elt.parentElement  nous retournera la  div  qui a l'id  parent
+
+elt.nextElementSibling  nous retournera l'élément qui a l'id  next
+
+elt.previousElementSibling  nous retournera l'élément qui a l'id  previous
+
+
+//////////////////////// Modifiez le contenu d'un élément
+
+Pour mondifier le contenu d'un élément nous avons
+innerHTML  et  textContent
+
+let elt = document.getElementById('main');
+elt.innerHTML = "<ul><li>Elément 1</li><li>Elément 2</li></ul>";
+
+Résultat :
+
+<div id="main">
+    <ul>
+        <li>Elément 1</li>
+        <li>Elément 2</li>
+    </ul>
+</div>
+
+//////////////////////// Modifier la class
+
+Il est aussi possible d'accéder directement à la liste des classes d'un élément avec la propriété  classList
+
+Exemple :
+elt.classList.add("nouvelleClasse");    // Ajoute la classe nouvelleClasse à l'élément
+elt.classList.remove("nouvelleClasse"); // Supprime la classe nouvelleClasse que l'on venait d'ajouter
+elt.classList.contains("nouvelleClasse");   // Retournera false car on vient de la supprimer
+elt.classList.replace("oldClass", "newClass"): // Remplacera oldClass par newClass si oldClass était présente sur l'élément
+
+//////////////////////// Changez les styles d'un élément
+
+
+elt.style.color = "#fff";      // Change la couleur du texte de l'élément à blanche
+elt.style.backgroundColor = "#000"; // Change la couleur de fond de l'élément en noir
+elt.style.fontWeight = "bold"; // Met le texte de l'élément en gras**
+
+/////////////////////// Modifiez les attributs
+
+elt.setAttribute("type", "password");   // Change le type de l'input en un type password
+elt.setAttribute("name", "my-password");    // Change le nom de l'input en my-password
+elt.getAttribute("name");               // Retourne my-password
+
+/////////////////////// Créez de nouveaux éléments
+
+const newElt = document.createElement("div");
+
+////////////////////// Ajouter un élément enfant
+
+const newElt = document.createElement("div");
+let elt = document.getElementById("main");
+
+elt.appendChild(newElt);
+
+/////////////////////////// Supprimez et remplacez des éléments
+
+const newElt = document.createElement("div");
+let elt = document.getElementById("main");
+elt.appendChild(newElt);
+
+elt.removeChild(newElt);    // Supprime l'élément newElt de l'élément elt
+elt.replaceChild(document.createElement("article"), newElt);    // Remplace l'élément newElt par un nouvel élément de type article
+
+/////////////////////////// Écoutez des événements
+
+*************************** Réagissez lors d'un clic sur un élément
+element.addEventListener('click', onClick)
+addEventListener(<event>, <callback>)
+
+Exemple : 
+const elt = document.getElementById('mon-lien');    // On récupère l'élément sur lequel on veut détecter le clic
+elt.addEventListener('click', function() {          // On écoute l'événement click
+    elt.innerHTML = "C'est cliqué !";               // On change le contenu de notre élément pour afficher "C'est cliqué !"
+});
+
+************** preventDefault()
+
+const elt = document.getElementById('mon-lien');    // On récupère l'élément sur lequel on veut détecter le clic
+elt.addEventListener('click', function(event) {     // On écoute l'événement click, notre callback prend un paramètre que nous avons appelé event ici
+    event.preventDefault();                         // On utilise la fonction preventDefault de notre objet event pour empêcher le comportement par défaut de cet élément lors du clic de la souris
+});
+
+
+*********stopPropagation() , vous pouvez ainsi empêcher que d'autres éléments reçoivent l'événement.
+
+
+elementInterieur.addEventListener('click', function(event) {
+    event.stopPropagation();
+    elementAvecMessage.innerHTML = "Message de l'élément intérieur";
+});
+
+
+////////////////////////// Mouvement de la souris
+
+elt.addEventListener('mousemove', function(event) {
+    const x = event.offsetX; // Coordonnée X de la souris dans l'élément
+    const y = event.offsetY; // Coordonnée Y de la souris dans l'élément
+});
+clientX  /  clientY  : position de la souris dans les coordonnées locales (contenu du DOM) ;
+
+offsetX  /  offsetY  : position de la souris par rapport à l'élément sur lequel on écoute l'événement ;
+
+pageX  /  pageY  : position de la souris par rapport au document entier ;
+
+screenX  /  screenY  : position de la souris par rapport à la fenêtre du navigateur ;
+
+movementX  /  movementY  : position de la souris par rapport à la position de la souris lors du dernier événement  mousemove
+
+//////////////////////////// Comprenez ce que sont des API et un service web
+
+Le but d’un service web est donc de fournir un service à celui qui le demande. Et pour ce faire, il met à disposition une API. 
+
+Une API, ou Application Programming Interface, est une interface de communication. 
+
+Les services web utilisent des protocoles
+Nous avons donc un protocole pour l'envoi de mail (SMTP), la réception de mail (IMAP), les requêtes liées à des ressources web (HTTP), aux transferts de fichiers (FTP), etc.
+
+HTTP signifie HyperText Transfer Protocol. C'est un protocole qui permet de communiquer avec un site Internet. 
+
+GET : permet de récupérer des ressources, comme par exemple le temps actuel sur un service de météo ;
+
+POST : permet de créer ou modifier une ressource, comme la création d'un nouvel utilisateur sur votre application ;
+
+PUT : permet de modifier une ressource, comme le nom de l'utilisateur que vous venez de créer avec POST ;
+
+DELETE : Permet de supprimer une ressource, comme un commentaire dans un fil de discussion. 
+
+Après requette
+
+Les données. Les données que vous avez demandées : une page HTML, etc…
+
+Le code HTTP. Il s’agit d’un code numérique qui vous indique comment s’est déroulée la requête. Voici les plus courants :
+
+200 : indique que tout s’est bien passé
+
+400 : indique que votre requête n’est pas conforme à ce qui est attendu
+
+401 : indique que vous devez être authentifié pour faire cette requête
+
+403 : indique que vous êtes bien authentifié mais que vous n’êtes pas autorisé à faire cette requête
+
+404 : indique que la ressource demandée n’existe pas
+
+500 : indique une erreur avec le service web
+
+
+//////////////////// Qu'est-ce que Fetch ?
+
+Fetch est un ensemble d'objets et de fonctions mis à disposition par le langage JavaScript, afin d'exécuter des requêtes HTTP de manière asynchrone.
+
+L’API Fetch  va nous permettre d'exécuter des requêtes HTTP sans avoir besoin de recharger la page du navigateur.
+
+/////////////////// Envoyez une première requête
+
+fetch("http://url-service-web.com/api/users");
+
+Ce code nous permet d'envoyer une requête HTTP de type GET au service web se trouvant à l'adresse  http://url-service-web.com/api/users 
+
+//////////////////////////Récupérez les données au format JSON
+
+Qu'est-ce que le format JSON ?
+JSON signifie JavaScript Object Notation.
+
+///////////////////////// Validez les données saisies par vos utilisateurs
+
+************************** Validez les données suite à des événements
+
+onChange  pour vérifier la donnée, dès que l'utilisateur a fini de l'éditer. Ou bien vous pouvez écouter l'événement  onInput  pour vérifier la donnée à chaque nouveau caractère.
+
+vous pouvez vérifier que ce qui est saisi commence par  Hello   avec le code suivant :
+
+myInput.addEventListener('input', function(e) {
+    var value = e.target.value;
+    if (value.startsWith('Hello ')) {
+        isValid = true;
+    } else {
+        isValid = false;
+    }
+});
+
+
+///////////////////// Faites une validation plus complexe avec les Regex
+
+Si notre texte commence par la lettre  e  et est suivi d'au moins 3 chiffres
+function isValid(value) {
+    return /^e[0-9]{3,}$/.test(value);
+}
+
+////////////////////////// Découvrez les contraintes HTML5
+
+L'attribut  type  de la balise  input  ne prend pas seulement comme valeurs  text  et  password . Cela peut aussi être  email ,  tel ,  URL ,  date  et bien d'autres. 
+
+il empêchera un utilisateur d'entrer autre chose que des chiffres, et limitera leur nombre à 3 chiffres.
+
+///////////////////////////// Envoyez des données avec une requête POST
+
+fetch("http://url-service-web.com/api/users", {
+	method: “POST”,
+	headers: { 
+'Accept': 'application/json', 
+'Content-Type': 'application/json' 
+},
+	body: JSON.stringify(jsonBody)
+});
+
+/////////////////////////// Comprenez comment fonctionne l'asynchrone en JS
+
+****************************** L'event loop
+
+
