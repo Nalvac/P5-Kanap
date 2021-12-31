@@ -6,31 +6,74 @@ let img = document.createElement("img");
 
 document.querySelector("div.item__img").appendChild(img);
 
+main();
+
+function main (){
+    getProduct();
+    addToCart ();
+}
 
 
-fetch(`http://localhost:3000/api/products/${id}`).then(function(res){
+function getProduct(){
 
-    if (res.ok){
-        return res.json();
-    }
+    fetch(`http://localhost:3000/api/products/${id}`).then(function(res){
 
-}).then(function (responseAPI){
-    img.src = responseAPI.imageUrl;
-    document.getElementById("title").textContent = responseAPI.name;
-    document.getElementById("price").textContent = responseAPI.price;
-    document.getElementById("description").textContent = responseAPI.description;
+        if (res.ok){
+            return res.json();
+        }
+
+    }).then(function (responseAPI){
+        img.src = responseAPI.imageUrl;
+        document.getElementById("title").textContent = responseAPI.name;
+        document.getElementById("price").textContent = responseAPI.price;
+        document.getElementById("description").textContent = responseAPI.description;
 
 
 
-    for (colors of responseAPI.colors){
-        
-    let option = document.createElement("option");
+        for (colors of responseAPI.colors){
+            
+            let option = document.createElement("option");    
+            document.getElementById("colors").appendChild(option);
+            option.value = colors;
+            option.textContent = colors;
+        }
+    }).catch(function(error){
+        console.log(error);
+    })
+}
+
+function addToCart(){
+    const addToCartButton = document.getElementById("addToCart");
+
+    console.log("1")
+    addToCartButton.addEventListener("click", function(){ 
     
-    document.getElementById("colors").appendChild(option);
-        option.value = colors;
-        option.textContent = colors;
-    }
-    console.log(responseAPI);
-}).catch(function(error){
-    console.log(error);
-})
+    const productTitle = document.getElementById("title").innerHTML;
+    const productPrice = document.getElementById("price").innerHTML;   
+    const productQuantity = document.getElementById("quantity").value;
+    const productColors = document.getElementById("colors").value;
+        if (productQuantity > 0 && productQuantity < 100){ 
+            console.log("3")
+            let productAddToCart = {
+                name: productTitle ,
+                price: parseFloat(productPrice),
+                quantity: parseFloat(productQuantity),
+                color :  productColors,
+                _id: id,
+            }
+            console.log(productAddToCart.color);
+            let arrayProductsInCart = [];
+      
+            // Si le localStorage existe, on récupère son contenu, on l'insère dans le tableau arrayProductsInCart, puis on le renvoit vers le localStorage avec le nouveau produit ajouté.
+            if (localStorage.getItem("products") !== null) {
+              arrayProductsInCart = JSON.parse(localStorage.getItem("products"));
+
+              // Si le LS est vide, on le crée avec le produit ajouté
+            } 
+            
+              arrayProductsInCart.push(productAddToCart);
+              localStorage.setItem("products", JSON.stringify(arrayProductsInCart));
+              console.log(arrayProductsInCart);
+        }
+    })
+}
