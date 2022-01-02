@@ -52,7 +52,7 @@ function addToCart(){
     const productPrice = document.getElementById("price").innerHTML;   
     const productQuantity = document.getElementById("quantity").value;
     const productColors = document.getElementById("colors").value;
-        if (productQuantity > 0 && productQuantity < 100){ 
+        if (productQuantity > 0 && productQuantity < 100  && productColors !=""){ 
             console.log("3")
             let productAddToCart = {
                 name: productTitle ,
@@ -89,6 +89,8 @@ function addToCart(){
             }
             
 
+        }else{
+            
         }
     })
 }

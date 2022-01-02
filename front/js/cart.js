@@ -6,6 +6,8 @@ main();
 function main (){
 console.log(panier)
     displayCart ();
+    displayTotal ()
+
 }
 
 function displayCart (){
@@ -82,5 +84,17 @@ function displayCart (){
 
     }
 
+
+}
+
+function displayTotal (){
+    let quantity_total= 0;
+    let price_total = 0;
+    for (let i in panier){
+         quantity_total += panier[i].quantity;
+         price_total +=  panier[i].price
+    }
+    document.getElementById("totalQuantity").textContent = quantity_total
+    document.getElementById("totalPrice").textContent= price_total
 
 }
