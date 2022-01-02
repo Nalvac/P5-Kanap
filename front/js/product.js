@@ -65,13 +65,13 @@ function addToCart(){
             let arrayProductsInCart = [];
       
             // Si le localStorage existe, on récupère son contenu, on l'insère dans le tableau arrayProductsInCart, puis on le renvoit vers le localStorage avec le nouveau produit ajouté.
-            if (localStorage.getItem("products") !== null) {
-              arrayProductsInCart = JSON.parse(localStorage.getItem("products"));
+            if (localStorage.getItem("panier") !== null) {
+              arrayProductsInCart = JSON.parse(localStorage.getItem("panier"));
 
               const getProduct = arrayProductsInCart.find((element)=> element._id === productAddToCart._id && element.color === productAddToCart.color);
                 if(getProduct){
                     getProduct.quantity += productAddToCart.quantity;
-                    localStorage.setItem("products", JSON.stringify(arrayProductsInCart));
+                    localStorage.setItem("panier", JSON.stringify(arrayProductsInCart));
                     console.log(arrayProductsInCart);
                     console.log("return");
                     return;
@@ -79,12 +79,12 @@ function addToCart(){
                 }
                 
                 arrayProductsInCart.push(productAddToCart);
-                localStorage.setItem("products", JSON.stringify(arrayProductsInCart));
+                localStorage.setItem("panier", JSON.stringify(arrayProductsInCart));
                 console.log(arrayProductsInCart);
             }else{
                 const cart = [];
                 cart.push(productAddToCart);
-                localStorage.setItem("products", JSON.stringify(cart));
+                localStorage.setItem("panier", JSON.stringify(cart));
                 console.log(cart);
             }
             
