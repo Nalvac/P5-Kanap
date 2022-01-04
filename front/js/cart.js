@@ -107,20 +107,14 @@ function  deleteProductRoCart() {
     for (let i =  0 ; i < buttonDelete.length ; i++){
 
         buttonDelete[i].addEventListener('click', function(e){
-            e.preventDefault();
-            e.stopPropagation();
-            let productID = parseFloat(articleSelector[i].getAttribute("data-id")) ;
+            let idDelete = panier[i]._id;
+            let colorDelete = panier[i].color;
+
+            panier = panier.filter( element => element._id !== idDelete || element.color !== colorDelete );
+            localStorage.setItem("panier", JSON.stringify(panier));
+            articleSelector[i].remove();
             
-                if (productID == parseFloat(panier[i]._id)){
-                    console.log(panier[i]);
-                    panier.splice(i,1);
-                    location.reload();
-                    localStorage.setItem("panier", JSON.stringify(panier));
-                    displayTotal();
-                }
-            
-            
-           
+            displayTotal();
             })
 
     }
@@ -143,7 +137,6 @@ function modifyQtt() {
            
              displayTotal();
             // refresh rapide
-            location.reload();
         })
     }
 }
