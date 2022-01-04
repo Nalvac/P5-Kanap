@@ -115,6 +115,7 @@ function  deleteProductRoCart() {
 
             articleSelector[i].remove();
             displayTotal();
+            location.reload();
             })
 
     }
@@ -126,7 +127,7 @@ function modifyQtt() {
     for (let i = 0; i< qttModif.length; i++){
         console.log("hkjhg");
         qttModif[i].addEventListener('change' , function(e)  {
-            location.reload();
+           
             e.preventDefault();
             //Selection de l'element à modifier en fonction de son id ET sa couleur
 
