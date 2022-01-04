@@ -112,9 +112,10 @@ function  deleteProductRoCart() {
 
             panier = panier.filter( element => element._id !== idDelete || element.color !== colorDelete );
             localStorage.setItem("panier", JSON.stringify(panier));
-            articleSelector[i].remove();
+
             
             displayTotal();
+            location.reload();
             })
 
     }
@@ -122,7 +123,7 @@ function  deleteProductRoCart() {
 }
 function modifyQtt() {
     let qttModif = document.querySelectorAll("input");
-
+    panier = JSON.parse(localStorage.getItem("panier"));
     for (let i = 0; i< qttModif.length; i++){
         console.log("hkjhg");
         qttModif[i].addEventListener('change' , function(e)  {
@@ -131,12 +132,13 @@ function modifyQtt() {
             //Selection de l'element à modifier en fonction de son id ET sa couleur
 
             console.log("hkjhg");
-            panier[i].quantity =  qttModif[i].value
+            panier[i].quantity =  qttModif[i].valueAsNumber;
             console.log(panier[i].quantity);
             localStorage.setItem("panier",JSON.stringify(panier));
            
              displayTotal();
             // refresh rapide
+            location.reload();
         })
     }
 }
