@@ -113,9 +113,8 @@ function  deleteProductRoCart() {
             panier = panier.filter( element => element._id !== idDelete || element.color !== colorDelete );
             localStorage.setItem("panier", JSON.stringify(panier));
 
-            
+            articleSelector[i].remove();
             displayTotal();
-            location.reload();
             })
 
     }
@@ -127,8 +126,8 @@ function modifyQtt() {
     for (let i = 0; i< qttModif.length; i++){
         console.log("hkjhg");
         qttModif[i].addEventListener('change' , function(e)  {
+            location.reload();
             e.preventDefault();
-            e.stopPropagation();
             //Selection de l'element à modifier en fonction de son id ET sa couleur
 
             console.log("hkjhg");
