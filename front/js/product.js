@@ -6,11 +6,11 @@ let img = document.createElement("img");
 
 document.querySelector("div.item__img").appendChild(img);
 
-main();
+
 
 function main (){
     getProduct();
-    addToCart ();
+    addToCart ();/// dans get Product
 }
 
 
@@ -94,3 +94,4 @@ function addToCart(){
         }
     })
 }
+main();

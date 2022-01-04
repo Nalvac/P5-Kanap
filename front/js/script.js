@@ -1,4 +1,4 @@
-main();
+
 
 function main (){
     getProduct();
@@ -39,3 +39,4 @@ function getProduct(){
     });
 
 }
+main();

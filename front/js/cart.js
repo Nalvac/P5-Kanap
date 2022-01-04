@@ -1,13 +1,15 @@
 
 let panier = JSON.parse(localStorage.getItem("panier")); 
 let cartSelect = document.getElementById("cart__items");
-main();
+
 
 function main (){
 console.log(panier)
     displayCart ();
-    displayTotal ()
-
+    displayTotal ();
+    deleteProductRoCart();
+    modifyQtt();
+ 
 }
 
 function displayCart (){
@@ -78,7 +80,7 @@ function displayCart (){
         divCart__item__content__settings__delete.classList.add("cart__item__content__settings__delete");
         divCart__item__content__settings.appendChild(divCart__item__content__settings__delete);
         let p_delete = document.createElement("p");
-        p_delete.classList.add("cart__item__content__settings__delete");
+        p_delete.classList.add("deleteItem");
         p_delete.textContent = "Supprimer"
         divCart__item__content__settings__delete.appendChild(p_delete);
 
@@ -91,10 +93,58 @@ function displayTotal (){
     let quantity_total= 0;
     let price_total = 0;
     for (let i in panier){
-         quantity_total += panier[i].quantity;
-         price_total +=  panier[i].price
+         quantity_total += parseFloat( panier[i].quantity);
+         price_total +=  parseFloat(panier[i].price * panier[i].quantity);
     }
     document.getElementById("totalQuantity").textContent = quantity_total
     document.getElementById("totalPrice").textContent= price_total
 
 }
+function  deleteProductRoCart() {
+    
+    let buttonDelete = document.querySelectorAll(".deleteItem");
+    let articleSelector = document.querySelectorAll(".cart__item");
+    for (let i =  0 ; i < buttonDelete.length ; i++){
+
+        buttonDelete[i].addEventListener('click', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            let productID = parseFloat(articleSelector[i].getAttribute("data-id")) ;
+            
+                if (productID == parseFloat(panier[i]._id)){
+                    console.log(panier[i]);
+                    panier.splice(i,1);
+                    location.reload();
+                    localStorage.setItem("panier", JSON.stringify(panier));
+                    displayTotal();
+                }
+            
+            
+           
+            })
+
+    }
+    
+}
+function modifyQtt() {
+    let qttModif = document.querySelectorAll("input");
+
+    for (let i = 0; i< qttModif.length; i++){
+        console.log("hkjhg");
+        qttModif[i].addEventListener('change' , function(e)  {
+            e.preventDefault();
+            e.stopPropagation();
+            //Selection de l'element à modifier en fonction de son id ET sa couleur
+
+            console.log("hkjhg");
+            panier[i].quantity =  qttModif[i].value
+            console.log(panier[i].quantity);
+            localStorage.setItem("panier",JSON.stringify(panier));
+           
+             displayTotal();
+            // refresh rapide
+            location.reload();
+        })
+    }
+}
+main();
