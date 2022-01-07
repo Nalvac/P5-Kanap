@@ -238,8 +238,7 @@ function getForm() {
     function postForm(){
         const buttonCommande = document.getElementById("order");
 
-        buttonCommande.addEventListener('click', function(e){
-        e.preventDefault();
+        buttonCommande.addEventListener('click', function(){
         //Récupération des coordonnées du formulaire client
         let inputName = document.getElementById('firstName');
         let inputLastName = document.getElementById('lastName');
@@ -248,11 +247,11 @@ function getForm() {
         let inputMail = document.getElementById('email');
             console.log('bonjour');
         //Construction d'un array depuis le local storage
-        let Products_id = [];
+        let Products = [];
         for (let i = 0; i<panier.length;i++) {
-            Products_id.push(panier[i]._id);
+            Products.push(panier[i]);
         }
-        console.log(Products_id);
+        console.log(Products);
 
         const order = {
             contact : {
@@ -262,27 +261,31 @@ function getForm() {
                 city: inputCity.value,
                 email: inputMail.value,
             },
-            ProductsId : Products_id,
+            products: Products,
         } 
         console.log(order);
+
         const options = {
-        method: "POST",
-        body: JSON.stringify(order),
-        headers: { "Content-Type": "application/json" },
+            methode : 'POST',
+            body : JSON.stringify(order),
+            headers :{
+                'Accept' : 'application/json',
+                'content-type' : 'application/json'
+            },
+            
         };
 
-        fetch("http://localhost:3000/api/products/order",options)
-        .then((response) => response.json())
-        .then((data) => {
+        fetch("http://localhost:3000/api/products/order", options).then(function(res){
+            if(res.ok){
+                return res.json();
+            }
+        }).then(function(data){
             console.log(data);
             localStorage.clear();
-            localStorage.setItem("orderId", data.orderId);
-            console.log(data.orderId);
-            //document.location.href = "confirmation.html";
+            localStorage.setItem("orderId", data._id);
+
+            document.location.href = "confirmation.html";
         })
-        .catch((err) => {
-            alert ("Problème avec fetch : " + err.message);
-        });
         })
 
     }
