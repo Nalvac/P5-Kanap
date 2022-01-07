@@ -282,7 +282,7 @@ function getForm() {
         }).then(function(data){
             console.log(data);
             localStorage.clear();
-            localStorage.setItem("orderId", data._id);
+            localStorage.setItem("orderId", data.orderId);
 
             document.location.href = "confirmation.html";
         })
