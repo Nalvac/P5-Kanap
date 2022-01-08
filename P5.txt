@@ -320,5 +320,119 @@ fetch("http://url-service-web.com/api/users", {
 /////////////////////////// Comprenez comment fonctionne l'asynchrone en JS
 
 ****************************** L'event loop
+setTimeout  est la fonction la plus répandue lorsque l'on veut exécuter du code asynchrone sans bloquer le fil d'exécution en cours
+
+setTimeout(function() {
+    console.log("I'm here!")
+}, 5000);
+
+console.log("Where are you?");
 
 
+
+////////////////////////// Gérez du code asynchrone
+
+Pour gérer les erreurs avec les callbacks, la méthode la plus utilisée est de prendre 2 paramètres dans notre callback. Le 2e paramètre est notre donnée et le 1er est l'erreur
+
+fs.readFile(filePath, function(err, data) {
+    if (err) {
+        throw err;
+    }
+    // Do something with data
+});
+
+///////////////////// Promise
+
+Lorsque l'on exécute du code asynchrone, celui-ci va immédiatement nous retourner une "promesse" qu'un résultat nous sera envoyé prochainement.
+
+Cette promesse est en fait un objet Promise qui peut être  resolve  avec un résultat, ou  reject  avec une erreur.
+
+ on peut utiliser sa fonction  then()  pour exécuter du code dès que la promesse est résolue, et sa fonction  catch()  pour exécuter du code dès qu'une erreur est survenue.
+
+functionThatReturnsAPromise()
+    .then(function(data) {
+        // Do somthing with data 
+    })
+    .catch(function(err) {
+        // Do something with error
+    });
+
+///////////////////// Async/await
+
+async  et  await  sont 2 nouveaux mots clés qui permettent de gérer le code asynchrone de manière beaucoup plus intuitive, en bloquant l'exécution d'un code asynchrone jusqu'à ce qu'il retourne un résultat.
+
+async function fonctionAsynchrone1() {/* code asynchrone */}
+async function fonctionAsynchrone2() {/* code asynchrone */}
+
+async function fonctionAsynchrone3() {
+ const value1 = await fonctionAsynchrone1();
+ const value2 = await fonctionAsynchrone2();
+ return value1 + value2;
+}
+
+//////////////////////////Gérez des erreurs async/await
+Avec try catch
+
+//////////////////////// Parallélisez plusieurs requêtes HTTP
+***********************Enchaînez des requêtes avec les callbacks
+var GETRequestCount = 0;
+var GETRequestResults = [];
+
+function onGETRequestDone(err, result) {
+    if (err) throw err;
+    
+    GETRequestCount++;
+    GETRequestResults.push(result);
+    
+    if (GETRequestCount == 2) {
+        post(url3, function(err, result) {
+            if (err) throw err;
+            
+            // We are done here !
+        });
+    }
+}
+
+get(url1, onGETRequestDone);
+get(url2, onGETRequestDone);
+
+
+******************************Enchaînez des requêtes avec les Promise
+
+Grâce à la fonction   Promise.all  , voyons comment exécuter nos requêtes en parallèle et en séquence avec les  Promise
+
+Promise.all([get(url1), get(url2)])
+    .then(function(results) {
+        return Promise.all([results, post(url3)]];
+    })
+    .then(function(allResults) {
+        // We are done here !
+    });
+
+
+
+*****************************Enchaînez des requêtes avec async/await
+async function requests() {
+    var getResults = await Promise.all([get(url1), get(url2)]);
+    var postResult = await post(url3);
+    return [getResults, postResult];
+}
+
+requests().then(function(allResults) {
+    // We are done here !
+});
+
+//////////////////// Initialisez votre projet
+un gestionnaire de paquets (package manager en anglais). C'est un programme qui vous permet d'installer très facilement des modules pour le JavaScript, 
+
+npm init
+npm install <module_name> --save-dev
+
+
+Compilez et exécutez votre code avec webpack
+
+
+Grâce à un transpiler afin de rendre notre code JavaScript compatible avec les navigateurs les moins récents 
+
+Transpiler avec Babel
+npm install --save-dev babel-loader @babel/core @babel/preset-env babel-polyfill

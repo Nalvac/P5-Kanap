@@ -1,10 +1,8 @@
 
 let panier = JSON.parse(localStorage.getItem("panier")); 
-let cartSelect = document.getElementById("cart__items");
 
 
 function main (){
-console.log(panier)
     displayCart ();
     displayTotal ();
     deleteProductRoCart();
@@ -15,13 +13,19 @@ console.log(panier)
 }
 
 function displayCart (){
+    if (panier == null || panier == 0){
+        
+    }else{
 
-    for (let i in panier){
+            for (let i in panier){
+
+        
+         let cartSelect = document.querySelector("#cart__items");
         let article = document.createElement("article");
+        cartSelect.appendChild(article);
         article.classList.add("cart__item");
         article.setAttribute("data-id", `${panier[i]._id}`);
         article.setAttribute("data-color", `${panier[i].color}`);
-        cartSelect.appendChild(article);
         let divCartItemImag = document.createElement("div");
         divCartItemImag.classList.add("cart__item__img");
         let img = document.createElement("img");
@@ -87,6 +91,9 @@ function displayCart (){
         divCart__item__content__settings__delete.appendChild(p_delete);
 
     }
+    }
+
+
 
 
 }
@@ -98,8 +105,8 @@ function displayTotal (){
          quantity_total += parseFloat( panier[i].quantity);
          price_total +=  parseFloat(panier[i].price * panier[i].quantity);
     }
-    document.getElementById("totalQuantity").textContent = quantity_total
-    document.getElementById("totalPrice").textContent= price_total
+    document.getElementById("totalQuantity").textContent = quantity_total;
+    document.getElementById("totalPrice").textContent= price_total;
 
 }
 function  deleteProductRoCart() {
@@ -235,10 +242,12 @@ function getForm() {
     }
 
 
-    function postForm(){
+function postForm(){
         const buttonCommande = document.getElementById("order");
 
-        buttonCommande.addEventListener('click', function(){
+        buttonCommande.addEventListener('click', function(e){
+            //e.stopPropagation();
+        e.preventDefault();
         //Récupération des coordonnées du formulaire client
         let inputName = document.getElementById('firstName');
         let inputLastName = document.getElementById('lastName');
@@ -249,7 +258,7 @@ function getForm() {
         //Construction d'un array depuis le local storage
         let Products = [];
         for (let i = 0; i<panier.length;i++) {
-            Products.push(panier[i]);
+            Products.push(panier[i]._id);
         }
         console.log(Products);
 
@@ -266,11 +275,11 @@ function getForm() {
         console.log(order);
 
         const options = {
-            methode : 'POST',
+            method : 'POST',
             body : JSON.stringify(order),
             headers :{
                 'Accept' : 'application/json',
-                'content-type' : 'application/json'
+                'Content-Type' : 'application/json'
             },
             
         };
@@ -283,12 +292,11 @@ function getForm() {
             console.log(data);
             localStorage.clear();
             localStorage.setItem("orderId", data.orderId);
-
             document.location.href = "confirmation.html";
+        }).catch((e)=>{
+            console.log(e);
         })
         })
 
-    }
-
-
+}
 main();
