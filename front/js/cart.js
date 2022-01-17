@@ -1,6 +1,9 @@
 
 let panier = JSON.parse(localStorage.getItem("panier")); 
 
+let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+let NameRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
 
 function main (){
     displayCart ();
@@ -133,6 +136,7 @@ function  deleteProductRoCart() {
 }
 function modifyQtt() {
     let qttModif = document.querySelectorAll("input[min]");
+    let articleSelector = document.querySelectorAll(".cart__item");
     panier = JSON.parse(localStorage.getItem("panier"));
     for (let i = 0; i< qttModif.length; i++){
         console.log("hkjhg");
@@ -140,11 +144,17 @@ function modifyQtt() {
             e.preventDefault();
             //Selection de l'element à modifier en fonction de son id ET sa couleur
 
-            console.log("hkjhg");
-            panier[i].quantity =  qttModif[i].valueAsNumber;
-            console.log(panier[i].quantity);
-            localStorage.setItem("panier",JSON.stringify(panier));
-           
+
+            if ( qttModif[i].valueAsNumber == 0){
+                panier = panier.filter( element => element._id !==  panier[i]._id || element.color !== panier[i].color );
+                localStorage.setItem("panier", JSON.stringify(panier));
+                articleSelector[i].remove();
+            }else{
+                console.log("hkjhg");
+                panier[i].quantity =  qttModif[i].valueAsNumber;
+                console.log(panier[i].quantity);
+                localStorage.setItem("panier",JSON.stringify(panier));
+            }
              displayTotal();
             // refresh rapide
             location.reload();
@@ -156,9 +166,7 @@ function getForm() {
     let form = document.querySelector(".cart__order__form");
 
     //Création des expressions régulières
-    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-    let NameRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-    let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+
 
     // Ecoute de la modification du prénom
     form.firstName.addEventListener('change', function(){
@@ -232,7 +240,7 @@ function getForm() {
     //validation de l'email
     const validEmail = function(inputEmail) {
         let emailErrorMsg = inputEmail.nextElementSibling;
-
+        const buttonCommande = document.getElementById("order");
         if (emailRegExp.test(inputEmail.value)) {
             emailErrorMsg.innerHTML = '';
         } else {
@@ -244,58 +252,61 @@ function getForm() {
 
 function postForm(){
         const buttonCommande = document.getElementById("order");
-
-        buttonCommande.addEventListener('click', function(e){
-            //e.stopPropagation();
-        e.preventDefault();
         //Récupération des coordonnées du formulaire client
         let inputName = document.getElementById('firstName');
         let inputLastName = document.getElementById('lastName');
         let inputAdress = document.getElementById('address');
         let inputCity = document.getElementById('city');
         let inputMail = document.getElementById('email');
-            console.log('bonjour');
-        //Construction d'un array depuis le local storage
-        let Products = [];
-        for (let i = 0; i<panier.length;i++) {
-            Products.push(panier[i]._id);
-        }
-        console.log(Products);
+        buttonCommande.addEventListener('click', function(e){
+            //e.stopPropagation();
+        e.preventDefault();
+            if(NameRegExp.test(inputName.value) && NameRegExp.test(inputLastName.value) && addressRegExp.test(inputAdress.value) &&
+            NameRegExp.test(inputCity.value) &&  emailRegExp.test(inputMail.value)){ 
 
-        const order = {
-            contact : {
-                firstName: inputName.value,
-                lastName: inputLastName.value,
-                address: inputAdress.value,
-                city: inputCity.value,
-                email: inputMail.value,
-            },
-            products: Products,
-        } 
-        console.log(order);
+                //Construction d'un array depuis le local storage
+                let Products = [];
+                for (let i = 0; i<panier.length;i++) {
+                    Products.push(panier[i]._id);
+                }
+                console.log(Products);
 
-        const options = {
-            method : 'POST',
-            body : JSON.stringify(order),
-            headers :{
-                'Accept' : 'application/json',
-                'Content-Type' : 'application/json'
-            },
-            
-        };
+                const order = {
+                    contact : {
+                        firstName: inputName.value,
+                        lastName: inputLastName.value,
+                        address: inputAdress.value,
+                        city: inputCity.value,
+                        email: inputMail.value,
+                    },
+                    products: Products,
+                } 
+                console.log(order);
+                console.log(NameRegExp.test(inputName.value));
 
-        fetch("http://localhost:3000/api/products/order", options).then(function(res){
-            if(res.ok){
-                return res.json();
+                const options = {
+                    method : 'POST',
+                    body : JSON.stringify(order),
+                    headers :{
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json'
+                    },
+                    
+                };
+
+                fetch("http://localhost:3000/api/products/order", options).then(function(res){
+                    if(res.ok){
+                        return res.json();
+                    }
+                }).then(function(data){
+                    console.log(data);
+                    localStorage.clear();
+                    localStorage.setItem("orderId", data.orderId);
+                    document.location.href = "confirmation.html";
+                }).catch((e)=>{
+                    console.log(e);
+                })
             }
-        }).then(function(data){
-            console.log(data);
-            localStorage.clear();
-            localStorage.setItem("orderId", data.orderId);
-            document.location.href = "confirmation.html";
-        }).catch((e)=>{
-            console.log(e);
-        })
         })
 
 }
