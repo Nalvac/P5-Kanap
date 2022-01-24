@@ -14,16 +14,19 @@ function main (){
     postForm();
  
 }
-
+// Fonction permettant d'affichier les produits ajoutés au panier
 function displayCart (){
+    // Si le panier est vide on affiche un message 
     if (panier == null || panier == 0){
-        
+        let cartSelect = document.querySelector("#cart__items");
+        let p = document.createElement("p");
+        cartSelect.appendChild(p);
+        p.innerText="Votre panier est vide";
+        //Si non on affiche les produits ajoutés au panier
     }else{
 
-            for (let i in panier){
-
-        
-         let cartSelect = document.querySelector("#cart__items");
+        for (let i in panier){        
+        let cartSelect = document.querySelector("#cart__items");
         let article = document.createElement("article");
         cartSelect.appendChild(article);
         article.classList.add("cart__item");
@@ -34,6 +37,7 @@ function displayCart (){
         let img = document.createElement("img");
         article.appendChild(divCartItemImag);
         console.log(article.innerHTML);
+        //Grâce à l'id su storage on effectue une requête afin de récupérer ses produits.
         fetch(`http://localhost:3000/api/products/${panier[i]._id}`).then(function(res){
 
             if (res.ok){
@@ -51,18 +55,26 @@ function displayCart (){
         }).catch(function(err){
             console.log(err)
         })
+
+        // Mise en place du dom pour l'affiche du panier
+
         divCartItemImag.classList.add("cart__item__img");
         article.appendChild(divCartItemImag);
         let divCart__item__content = document.createElement("div");
         divCart__item__content.classList.add("divCart__item__content");
         article.appendChild(divCart__item__content);
         let divCart__item__content__description = document.createElement("div");
+        //Description produit
         divCart__item__content__description.classList.add("cart__item__content__description");
         divCart__item__content.appendChild(divCart__item__content__description);
         let h2= document.createElement("h2");
         let p_color= document.createElement("p");
         let p_price= document.createElement("p");
+
+        //Nom du produit
         h2.textContent = panier[i].name;
+
+        //Prix et couleur du produit
         p_color.textContent = panier[i].color;
         p_price.textContent = panier[i].price + " €";
         divCart__item__content__description.appendChild(h2);
@@ -72,6 +84,8 @@ function displayCart (){
         divCart__item__content__settings.classList.add("cart__item__content__settings");
         divCart__item__content.appendChild(divCart__item__content__settings);
         let divCart__item__content__settings__quantity = document.createElement("div");
+
+        // Input pour la quantité
         divCart__item__content__settings__quantity.classList.add("cart__item__content__settings__quantity");
         divCart__item__content__settings.appendChild(divCart__item__content__settings__quantity);
         let p_quantity = document.createElement("p");
@@ -82,9 +96,13 @@ function displayCart (){
         inputNumber.setAttribute("min", "1");
         inputNumber.setAttribute("max", "100");
         inputNumber.setAttribute("value", `${panier[i].quantity}`);
+
         divCart__item__content__settings__quantity.appendChild(p_quantity);
         divCart__item__content__settings__quantity.appendChild(inputNumber);
 
+        
+
+        //Boutton supprimer
         let divCart__item__content__settings__delete = document.createElement("div");
         divCart__item__content__settings__delete.classList.add("cart__item__content__settings__delete");
         divCart__item__content__settings.appendChild(divCart__item__content__settings__delete);
@@ -101,40 +119,53 @@ function displayCart (){
 
 }
 
+// Fonction d'affichage de la quatité total ainsi que le prix total du panier
+
 function displayTotal (){
     let quantity_total= 0;
     let price_total = 0;
+    // On fait la somme des quantité de produit ainsi que montant total du panier
     for (let i in panier){
          quantity_total += parseFloat( panier[i].quantity);
          price_total +=  parseFloat(panier[i].price * panier[i].quantity);
     }
+    // Affichage des totaux
     document.getElementById("totalQuantity").textContent = quantity_total;
     document.getElementById("totalPrice").textContent= price_total;
 
 }
+// Fonction pour la suppression d'un produit du panier
 function  deleteProductRoCart() {
-    
+    //On recupère tout les elmts ayant la class .deleteItem (bouttons)
     let buttonDelete = document.querySelectorAll(".deleteItem");
+   //On recupère tout les elmts ayant la class .cart__item (Produits)
     let articleSelector = document.querySelectorAll(".cart__item");
-    for (let i =  0 ; i < buttonDelete.length ; i++){
 
+    //Grâce à cette boucle nous plaçons un ecouteur sur toute les bouttons supprimer du panier
+    for (let i =  0 ; i < buttonDelete.length ; i++){
+        //lorsqu'un boutton est appuyé 
         buttonDelete[i].addEventListener('click', function(e){
             e.preventDefault();
+            //On récupère son id et sa couleur
             let idDelete = panier[i]._id;
             let colorDelete = panier[i].color;
-
+            //On filtre le panier en supprimant du storage le produit ayant cet id et cette couleur
             panier = panier.filter( element => element._id !== idDelete || element.color !== colorDelete );
             localStorage.setItem("panier", JSON.stringify(panier));
-
+            //Si on le supprime du DOM
             articleSelector[i].remove();
+            //On fait une mise à jour des totaux
             displayTotal();
+            //On recharge la pgae
             location.reload();
             })
 
     }
     
 }
+// Fonction de modification de la quantité du produit
 function modifyQtt() {
+    //On récup
     let qttModif = document.querySelectorAll("input[min]");
     let articleSelector = document.querySelectorAll(".cart__item");
     panier = JSON.parse(localStorage.getItem("panier"));
