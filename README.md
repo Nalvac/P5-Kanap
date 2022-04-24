@@ -1,4 +1,5 @@
 # Kanap #
+Ce projet consiste en l'élaboration de la partie frontend d'une application web de vente de Canapé en JavaScript js. L'obectif étant la mise en pratique de javascript pour le web, pas de framework autorisé.
 
 This is the front end and back end server for Project 5 of the Web Developer path.
 
